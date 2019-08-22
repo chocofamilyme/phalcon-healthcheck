@@ -65,9 +65,9 @@ return [
     */
 
     'componentChecks' => [
-        //'DB'       => Chocofamily\PhalconHealthCheck\Services\Checks\DatabaseComponentCheck::class,
-        //'CACHE'    => Chocofamily\PhalconHealthCheck\Services\Checks\CacheComponentCheck::class,
+        'DB'       => Chocofamily\PhalconHealthCheck\Services\Checks\DatabaseComponentCheck::class,
+        'CACHE'    => Chocofamily\PhalconHealthCheck\Services\Checks\CacheComponentCheck::class,
         //'SESSIONS' => Chocofamily\PhalconHealthCheck\Services\Checks\SessionsComponentCheck::class,
-        //'STORAGE'  => Chocofamily\PhalconHealthCheck\Services\Checks\StorageComponentCheck::class,
+        'STORAGE'  => Chocofamily\PhalconHealthCheck\Services\Checks\StorageComponentCheck::class,
     ]
 ];

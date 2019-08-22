@@ -1,6 +1,8 @@
 <?php
 namespace Chocofamily\PhalconHealthCheck\Providers;
 
+use Phalcon\Config;
+use Phalcon\Di;
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
 use RestAPI\Providers\AbstractServiceProvider;
 
@@ -20,6 +22,17 @@ class HealthCheckServiceProvider extends AbstractServiceProvider
      */
     public function register()
     {
+        $di = Di::getDefault();
+        $config = $di->get('config');
+        $node = 'healthcheck';
+
+        if(!$config->offsetExists($node)) {
+            $healthcheckConfig = include('/srv/www/app/vendor/chocofamilyme22/phalcon-healthcheck/healthcheck.php');
+            $healthcheckConfig = new Config($healthcheckConfig);
+            $config->offsetSet($node, new Config());
+            $config->get($node)->merge($healthcheckConfig);
+        }
+
         $routes = [
             [
                 'class' => 'Chocofamily\PhalconHealthCheck\Controllers\HealthCheckController',
