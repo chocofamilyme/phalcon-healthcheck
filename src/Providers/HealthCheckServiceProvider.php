@@ -27,8 +27,8 @@ class HealthCheckServiceProvider extends AbstractServiceProvider
         $node = 'healthcheck';
 
         if(!$config->offsetExists($node)) {
-            $healthcheckConfig = include('/srv/www/app/vendor/chocofamilyme22/phalcon-healthcheck/healthcheck.php');
-            $healthcheckConfig = new Config($healthcheckConfig);
+            $healthcheckArray = include('/srv/www/app/vendor/chocofamilyme22/phalcon-healthcheck/healthcheck.php');
+            $healthcheckConfig = new Config($healthcheckArray);
             $config->offsetSet($node, new Config());
             $config->get($node)->merge($healthcheckConfig);
         }
