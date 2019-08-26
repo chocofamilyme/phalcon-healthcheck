@@ -4,10 +4,12 @@ namespace Chocofamily\PhalconHealthCheck\Providers;
 use Phalcon\Config;
 use Phalcon\Di;
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
-use RestAPI\Providers\AbstractServiceProvider;
+use Phalcon\Mvc\User\Component;
 
-class HealthCheckServiceProvider extends AbstractServiceProvider
+class HealthCheckServiceProvider extends Component
 {
+    private $di;
+
     /**
      * The Service name.
      *
@@ -27,21 +29,23 @@ class HealthCheckServiceProvider extends AbstractServiceProvider
         $node = 'healthcheck';
 
         if(!$config->offsetExists($node)) {
-            $healthcheckArray = include('/srv/www/app/vendor/chocofamilyme/phalcon-healthcheck/healthcheck.php');
+            $healthcheckArray = include(__DIR__.'/../../healthcheck.php');
             $healthcheckConfig = new Config($healthcheckArray);
             $config->offsetSet($node, new Config());
             $config->get($node)->merge($healthcheckConfig);
         }
+
+        $healthcheckConfig = $config->get($node);
 
         $routes = [
             [
                 'class' => 'Chocofamily\PhalconHealthCheck\Controllers\HealthCheckController',
                 'methods' => [
                     'get' => [
-                        config('healthcheck.routesimple') => [
+                        $healthcheckConfig->get('routesimple') => [
                             'action' => 'simple'
                         ],
-                        config('healthcheck.routeextendet') => [
+                        $healthcheckConfig->get('routeextendet') => [
                             'action' => 'extendet'
                         ]
                     ]

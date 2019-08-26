@@ -7,7 +7,7 @@ use RuntimeException;
 
 class SessionsComponentCheck implements ComponentCheckInterface
 {
-    public function check(): void
+    public function check()
     {
         $di = Di::getDefault();
         $session = $di->get('session');

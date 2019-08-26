@@ -8,7 +8,7 @@ use Phalcon\Di;
 
 class DatabaseComponentCheck implements ComponentCheckInterface
 {
-    public function check(): void
+    public function check()
     {
         $di = Di::getDefault();
         $db = $di->get('db');

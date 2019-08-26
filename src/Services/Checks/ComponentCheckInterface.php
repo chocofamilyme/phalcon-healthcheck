@@ -7,5 +7,5 @@ interface ComponentCheckInterface
     /**
      * Perform check
      */
-    public function check(): void;
+    public function check();
 }

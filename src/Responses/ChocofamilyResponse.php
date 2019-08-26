@@ -2,12 +2,8 @@
 
 namespace Chocofamily\PhalconHealthCheck\Responses;
 
-use RestAPI\Traits\Response;
-
 class ChocofamilyResponse implements ResponseInterface
 {
-    use Response;
-
     const OK = 'OK';
     const CRITICAL = 'CRITICAL';
 
@@ -15,6 +11,8 @@ class ChocofamilyResponse implements ResponseInterface
      * Return data in a simple way
      *
      * @param $checks
+     *
+     * @return array
      */
     public function simpleResponse(array $checks)
     {
@@ -39,14 +37,15 @@ class ChocofamilyResponse implements ResponseInterface
         }
         $this->wrapArrayWithData($atLeastOneCheckIsCritical, $responseArray);
 
-        return $this->response($responseArray['message'], $responseArray['data'], $responseArray['error_code'],
-            $responseArray['status']);
+        return $this->response($responseArray);
     }
 
     /**
      * Return data in extendet way
      *
      * @param $checks
+     *
+     * @return array
      */
     public function extendetResponse(array $checks)
     {
@@ -79,8 +78,7 @@ class ChocofamilyResponse implements ResponseInterface
         }
         $this->wrapArrayWithData($atLeastOneCheckIsCritical, $responseArray);
 
-        return $this->response($responseArray['message'], $responseArray['data'], $responseArray['error_code'],
-            $responseArray['status']);
+        return $this->response($responseArray);
     }
 
     /**
@@ -103,5 +101,15 @@ class ChocofamilyResponse implements ResponseInterface
             $responseArray['status'] = 'success';
             $responseArray['message'] = 'Everything is fine';
         }
+    }
+
+    private function response($responseArray)
+    {
+        return [
+            'error_code' => $responseArray['error_code'],
+            'status'     => $responseArray['status'],
+            'message'    => $responseArray['message'],
+            'data'       => $responseArray['data']
+        ];
     }
 }

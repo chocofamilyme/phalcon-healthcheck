@@ -7,7 +7,7 @@ use RuntimeException;
 
 class CacheComponentCheck implements ComponentCheckInterface
 {
-    public function check(): void
+    public function check()
     {
         $di = Di::getDefault();
         $cache = $di->get('cache');

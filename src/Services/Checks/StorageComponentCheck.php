@@ -7,24 +7,26 @@ use RuntimeException;
 
 class StorageComponentCheck implements ComponentCheckInterface
 {
-    public function check(): void
+    public function check()
     {
         $storagePath = '../storage/';
+
         $file = $storagePath.'app/healthcheck.txt';
         if(!file_put_contents($file, 'randomText')) {
             throw new RuntimeException("Failed to write to $file");
         }
+        unlink($file);
 
-        $storagePath = '../storage/';
         $file = $storagePath.'cache/healthcheck.txt';
         if(!file_put_contents($file, 'randomText')) {
             throw new RuntimeException("Failed to write to $file");
         }
+        unlink($file);
 
-        $storagePath = '../storage/';
         $file = $storagePath.'logs/healthcheck.txt';
         if(!file_put_contents($file, 'randomText')) {
             throw new RuntimeException("Failed to write to $file");
         }
+        unlink($file);
     }
 }

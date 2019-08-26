@@ -2,6 +2,8 @@
 
 namespace Chocofamily\PhalconHealthCheck\Services;
 
+use Phalcon\Di;
+
 class ComponentCheckService
 {
     const OK = 'OK';
@@ -17,7 +19,9 @@ class ComponentCheckService
      */
     public function __construct()
     {
-        $this->checks = config('healthcheck.componentChecks');
+        $di = Di::getDefault();
+        $healthcheckConfig = $di->get('config')->get('healthcheck');
+        $this->checks = $healthcheckConfig->get('componentChecks');
     }
 
     /**
@@ -38,7 +42,8 @@ class ComponentCheckService
     }
 
     /**
-     * @param ComponentCheckInterface $check
+     * @param Checks\ComponentCheckInterface $check
+     *
      * @return array
      */
     private function getStatus(Checks\ComponentCheckInterface $check)
