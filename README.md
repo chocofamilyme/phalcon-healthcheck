@@ -9,6 +9,7 @@ composer require chocofamilyme/phalcon-healthcheck ^0.0
 - Add app/provider/HealthCheck/ServiceProvider.php with this content as an example:
 ```bash
 <?php
+// Use your own namespace
 namespace RestAPI\Providers\HealthCheck;
 
 use Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider;
@@ -22,7 +23,7 @@ class ServiceProvider extends HealthCheckServiceProvider implements ServiceProvi
 }
 ```
 - Add ServiceProvider class above to config/provders.php
-- Copy healthcheck.php to config and manage the necessary configuration values for the project
+- Copy healthcheck.php to config/ and manage necessary configurations values for the project
 
 # Checks
 - Database connection check
