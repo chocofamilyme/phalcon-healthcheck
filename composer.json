@@ -18,6 +18,9 @@
         "php": ">= 7.0.0",
         "ext-phalcon": ">= 3.0.0"
     },
+    "require-dev": {
+        "codeception/codeception": "^3.0.3"
+    },
     "autoload": {
         "psr-4": {
             "Chocofamily\\PhalconHealthCheck\\": "src/"
