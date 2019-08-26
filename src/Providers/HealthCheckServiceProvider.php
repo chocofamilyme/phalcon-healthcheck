@@ -67,4 +67,32 @@ class HealthCheckServiceProvider extends Component
             $this->getDI()->get('bootstrap')->getApplication()->mount($collection);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return void
+     */
+    public function boot()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->serviceName;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return void
+     */
+    public function configure()
+    {
+    }
 }
