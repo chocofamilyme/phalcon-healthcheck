@@ -13,7 +13,7 @@ namespace RestAPI\Providers\HealthCheck;
 
 use Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider;
 
-// Use your own ServiceProviderIntreface
+// Use your own ServiceProviderIntreface in project
 use RestAPI\Providers\ServiceProviderInterface;
 
 class ServiceProvider extends HealthCheckServiceProvider implements ServiceProviderInterface
@@ -21,6 +21,7 @@ class ServiceProvider extends HealthCheckServiceProvider implements ServiceProvi
 
 }
 ```
+- Add ServiceProvider class above to config/provders.php
 - Copy healthcheck.php to config and manage the necessary configuration values for the project
 
 # Checks
