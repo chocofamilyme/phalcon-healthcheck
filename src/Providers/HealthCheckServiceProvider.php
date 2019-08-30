@@ -8,14 +8,12 @@ use Phalcon\Mvc\User\Component;
 
 class HealthCheckServiceProvider extends Component
 {
-    private $di;
-
     /**
      * The Service name.
      *
      * @var string
      */
-    protected $serviceName = 'healthCheck';
+    protected $serviceName = 'healthcheck';
 
     /**
      * Register application service.
@@ -26,16 +24,52 @@ class HealthCheckServiceProvider extends Component
     {
         $di = Di::getDefault();
         $config = $di->get('config');
-        $node = 'healthcheck';
+        $this->mergePackageConfig($config);
+        $this->importRoutes($config);
+    }
 
-        if(!$config->offsetExists($node)) {
+    /**
+     * {@inheritdoc}
+     *
+     * @return void
+     */
+    public function boot()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->serviceName;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return void
+     */
+    public function configure()
+    {
+    }
+
+    public function mergePackageConfig(Config &$config)
+    {
+        if (!$config->offsetExists($this->serviceName)) {
             $healthcheckArray = include(__DIR__.'/../../healthcheck.php');
             $healthcheckConfig = new Config($healthcheckArray);
-            $config->offsetSet($node, new Config());
-            $config->get($node)->merge($healthcheckConfig);
+            $config->offsetSet($this->serviceName, new Config());
+            $config->get($this->serviceName)->merge($healthcheckConfig);
         }
+        //var_dump($config);
+    }
 
-        $healthcheckConfig = $config->get($node);
+    private function importRoutes(Config $config)
+    {
+        $healthcheckConfig = $config->get($this->serviceName);
 
         $routes = [
             [
@@ -68,31 +102,4 @@ class HealthCheckServiceProvider extends Component
         }
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return void
-     */
-    public function boot()
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->serviceName;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return void
-     */
-    public function configure()
-    {
-    }
 }
