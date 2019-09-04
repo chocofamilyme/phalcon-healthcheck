@@ -64,7 +64,6 @@ class HealthCheckServiceProvider extends Component
             $config->offsetSet($this->serviceName, new Config());
             $config->get($this->serviceName)->merge($healthcheckConfig);
         }
-        //var_dump($config);
     }
 
     private function importRoutes(Config $config)

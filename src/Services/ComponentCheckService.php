@@ -12,7 +12,7 @@ class ComponentCheckService
     /**
      * @var array
      */
-    private $checks;
+    private $healthcheckConfig;
 
     /**
      * ComponentCheck constructor.
@@ -20,8 +20,7 @@ class ComponentCheckService
     public function __construct()
     {
         $di = Di::getDefault();
-        $healthcheckConfig = $di->get('config')->get('healthcheck');
-        $this->checks = $healthcheckConfig->get('componentChecks');
+        $this->healthcheckConfig = $di->get('config')->get('healthcheck');
     }
 
     /**
@@ -29,13 +28,14 @@ class ComponentCheckService
      */
     public function getResponse()
     {
+        $checks = $this->healthcheckConfig->get('componentChecks');
         $checkResponses = [];
-        foreach($this->checks as $checkTitle => $check)
+        foreach($checks as $checkTitle => $check)
         {
             $response = $this->getStatus((new $check));
             $checkResponses[$checkTitle] = [
                 'status' => $response['status'],
-                'message' => $response['message'],
+                'message' => $response['message']
             ];
         }
         return $checkResponses;
@@ -46,7 +46,7 @@ class ComponentCheckService
      *
      * @return array
      */
-    private function getStatus(Checks\ComponentCheckInterface $check)
+    public function getStatus(Checks\ComponentCheckInterface $check)
     {
         try
         {
@@ -60,7 +60,7 @@ class ComponentCheckService
         {
             return [
                 'status' => false,
-                'message' => $exception->getMessage(),
+                'message' => $exception->getMessage()
             ];
         }
     }
