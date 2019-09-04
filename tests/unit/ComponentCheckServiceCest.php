@@ -13,15 +13,18 @@ class ComponentCheckServiceCest
      * @dataProvider componentCheckProvider
      *
      * @param UnitTester           $I
+     * @param \Helper\Unit         $helper
      * @param \Codeception\Example $data
+     *
+     * @throws ReflectionException
      */
-    public function tryToGetStatus(UnitTester $I, \Codeception\Example $data)
+    public function tryToGetStatus(UnitTester $I, \Helper\Unit $helper, \Codeception\Example $data)
     {
         $I->wantToTest('метод getStatus');
 
         $check = new $data['check'];
         $componentCheckService = new \Chocofamily\PhalconHealthCheck\Services\ComponentCheckService();
-        $actual = $componentCheckService->getStatus($check);
+        $actual = $helper->invokeMethod($componentCheckService, 'getStatus', [$check]);
         $expected = $data['expected'];
 
         $I->assertEquals($expected, $actual);

@@ -56,7 +56,7 @@ class HealthCheckServiceProvider extends Component
     {
     }
 
-    public function mergePackageConfig(Config &$config)
+    private function mergePackageConfig(Config &$config)
     {
         if (!$config->offsetExists($this->serviceName)) {
             $healthcheckArray = include(__DIR__.'/../../healthcheck.php');

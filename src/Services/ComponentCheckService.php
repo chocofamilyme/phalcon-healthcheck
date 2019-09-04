@@ -46,7 +46,7 @@ class ComponentCheckService
      *
      * @return array
      */
-    public function getStatus(Checks\ComponentCheckInterface $check)
+    private function getStatus(Checks\ComponentCheckInterface $check)
     {
         try
         {

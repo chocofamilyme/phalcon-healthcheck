@@ -9,7 +9,13 @@ class ConfigCest
     }
 
     // tests
-    public function tryToMergePackageConfig(UnitTester $I)
+    /**
+     * @param UnitTester   $I
+     * @param \Helper\Unit $helper
+     *
+     * @throws ReflectionException
+     */
+    public function tryToMergePackageConfig(UnitTester $I, \Helper\Unit $helper)
     {
         $I->wantToTest('Объединить конфигурацию пакета healthcheck.php, если проекте такого нет');
 
@@ -19,7 +25,8 @@ class ConfigCest
         $I->assertNull($healthcheckConfig);
 
         $serviceProvider = new \Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider();
-        $serviceProvider->mergePackageConfig($config);
+
+        $helper->invokeMethod($serviceProvider, 'mergePackageConfig', [&$config]);
         $healthcheckConfig = $config->get('healthcheck');
         $I->assertNotNull($healthcheckConfig);
     }
