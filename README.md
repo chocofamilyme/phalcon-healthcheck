@@ -23,7 +23,7 @@ class ServiceProvider extends HealthCheckServiceProvider implements ServiceProvi
 }
 ```
 - Add ServiceProvider class above to config/provders.php
-- Copy healthcheck.php to config/ and manage necessary configurations values for the project
+- Copy healthcheck.php to config/ and manage necessary configuration values for the project
 
 # Checks
 - Database connection check
