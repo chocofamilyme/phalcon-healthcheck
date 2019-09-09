@@ -3,6 +3,7 @@
 namespace Chocofamily\PhalconHealthCheck\Services\Checks;
 
 use Phalcon\Di;
+use Phalcon\Text;
 use RuntimeException;
 
 class CacheComponentCheck implements ComponentCheckInterface
@@ -12,8 +13,8 @@ class CacheComponentCheck implements ComponentCheckInterface
         $di = Di::getDefault();
         $cache = $di->get('cache');
 
-        $key = 'randomKey';
-        $value = 'randomValue';
+        $key = Text::random();
+        $value = Text::random();
         $cache->save($key, $value, 3);
 
         if($cache->get($key) != $value) {
