@@ -7,20 +7,25 @@ For example you want to check "Database Connection" of your microservice.
 composer require chocofamilyme/phalcon-healthcheck ^0.0
 ```
 - Add app/provider/HealthCheck/ServiceProvider.php with this content as an example:
-```bash
+```php
 <?php
-// Use your own namespace
+
 namespace RestAPI\Providers\HealthCheck;
 
-use Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider;
-
-// Use your own ServiceProviderIntreface in project
 use RestAPI\Providers\ServiceProviderInterface;
+use Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider;
 
 class ServiceProvider extends HealthCheckServiceProvider implements ServiceProviderInterface
 {
 
+    protected $app;
+
+    public function __construct(Phalcon\Mvc\Micro $app)
+    {
+        $this->app = $app;
+    }
 }
+
 ```
 - Add ServiceProvider class above to config/provders.php
 - Copy healthcheck.php to config/ and manage necessary configuration values for the project

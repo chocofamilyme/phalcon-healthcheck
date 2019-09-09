@@ -15,6 +15,8 @@ class HealthCheckServiceProvider extends Component
      */
     protected $serviceName = 'healthcheck';
 
+    protected $app;
+
     /**
      * Register application service.
      *
@@ -97,8 +99,23 @@ class HealthCheckServiceProvider extends Component
                 }
             }
 
-            $this->getDI()->get('bootstrap')->getApplication()->mount($collection);
+            $this->getApp()->mount($collection);
         }
     }
 
+    /**
+     * @return mixed
+     */
+    public function getApp()
+    {
+        return $this->app;
+    }
+
+    /**
+     * @param mixed $app
+     */
+    public function setApp($app): void
+    {
+        $this->app = $app;
+    }
 }
