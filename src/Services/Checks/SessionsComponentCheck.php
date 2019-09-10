@@ -3,6 +3,7 @@
 namespace Chocofamily\PhalconHealthCheck\Services\Checks;
 
 use Phalcon\Di;
+use Phalcon\Text;
 use RuntimeException;
 
 class SessionsComponentCheck implements ComponentCheckInterface
@@ -12,8 +13,8 @@ class SessionsComponentCheck implements ComponentCheckInterface
         $di = Di::getDefault();
         $session = $di->get('session');
 
-        $key = 'randomKey';
-        $value = 'randomValue';
+        $key = Text::random();
+        $value = Text::random();
         $session->set($key, $value);
 
         if($session->get($key) != $value) {
