@@ -3,6 +3,7 @@ namespace Chocofamily\PhalconHealthCheck\Providers;
 
 use Phalcon\Config;
 use Phalcon\Di;
+use \Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
 use Phalcon\Mvc\User\Component;
 
@@ -24,10 +25,12 @@ class HealthCheckServiceProvider extends Component
      */
     public function register()
     {
-        $di = Di::getDefault();
-        $config = $di->get('config');
-        $this->mergePackageConfig($config);
-        $this->importRoutes($config);
+        if ($this->getApp() instanceof Micro) {
+            $di = Di::getDefault();
+            $config = $di->get('config');
+            $this->mergePackageConfig($config);
+            $this->importRoutes($config);
+        }
     }
 
     /**
