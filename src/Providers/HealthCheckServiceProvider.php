@@ -1,4 +1,5 @@
 <?php
+
 namespace Chocofamily\PhalconHealthCheck\Providers;
 
 use Phalcon\Config;
@@ -26,7 +27,7 @@ class HealthCheckServiceProvider extends Component
     public function register()
     {
         if ($this->getApp() instanceof Micro) {
-            $di = Di::getDefault();
+            $di     = Di::getDefault();
             $config = $di->get('config');
             $this->mergePackageConfig($config);
             $this->importRoutes($config);
@@ -64,7 +65,7 @@ class HealthCheckServiceProvider extends Component
     private function mergePackageConfig(Config &$config)
     {
         if (!$config->offsetExists($this->serviceName)) {
-            $healthcheckArray = include(__DIR__.'/../../healthcheck.php');
+            $healthcheckArray  = include(__DIR__.'/../../healthcheck.php');
             $healthcheckConfig = new Config($healthcheckArray);
             $config->offsetSet($this->serviceName, new Config());
             $config->get($this->serviceName)->merge($healthcheckConfig);
@@ -77,18 +78,20 @@ class HealthCheckServiceProvider extends Component
 
         $routes = [
             [
-                'class' => 'Chocofamily\PhalconHealthCheck\Controllers\HealthCheckController',
+                'class'   => 'Chocofamily\PhalconHealthCheck\Controllers\HealthCheckController',
                 'methods' => [
                     'get' => [
-                        $healthcheckConfig->get('routesimple') => [
-                            'action' => 'simple'
+                        $healthcheckConfig->get('routesimple')   => [
+                            'action' => 'simple',
+                            'name'   => 'chocofamily-healthcheck',
                         ],
                         $healthcheckConfig->get('routeextendet') => [
-                            'action' => 'extendet'
-                        ]
-                    ]
-                ]
-            ]
+                            'action' => 'extendet',
+                            'name'   => 'chocofamily-healthchec-extendet',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($routes as $route) {
@@ -97,8 +100,7 @@ class HealthCheckServiceProvider extends Component
 
             foreach ($route['methods'] as $verb => $methods) {
                 foreach ($methods as $endpoint => $action) {
-                    $params = isset($action['params']) ? $action['params'] : [];
-                    $collection->$verb($endpoint, $action['action'], $params);
+                    $collection->$verb($endpoint, $action['action'], $action['name']);
                 }
             }
 
