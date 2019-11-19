@@ -6,7 +6,7 @@ For example you want to check "Database Connection" of your microservice.
 ```bash
 composer require chocofamilyme/phalcon-healthcheck ^0.0
 ```
-- Add app/provider/HealthCheck/ServiceProvider.php with this content as an example:
+- Create file app/provider/HealthCheck/ServiceProvider.php with this content:
 ```php
 <?php
 
@@ -17,17 +17,16 @@ use Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider;
 
 class ServiceProvider extends HealthCheckServiceProvider implements ServiceProviderInterface
 {
-
     protected $app;
-
-    public function __construct(Phalcon\Mvc\Micro $app)
+    
+    public function __construct()
     {
-        $this->app = $app;
+        $this->app = $this->getDI()->get('bootstrap')->getApplication();
     }
 }
 
 ```
-- Add ServiceProvider class above to config/provders.php
+- Add above ServiceProvider class to the config config/providers.php
 - Copy healthcheck.php to config/ and manage necessary configuration values for the project
 
 # Checks
