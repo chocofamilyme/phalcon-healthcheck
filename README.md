@@ -6,7 +6,7 @@ For example you want to check "Database Connection" of your microservice.
 ```bash
 composer require chocofamilyme/phalcon-healthcheck ^0.0
 ```
-- Create file app/provider/HealthCheck/ServiceProvider.php with this content:
+- Create file app/providers/HealthCheck/ServiceProvider.php with this content:
 ```php
 <?php
 
