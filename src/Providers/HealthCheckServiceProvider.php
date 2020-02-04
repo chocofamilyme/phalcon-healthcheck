@@ -2,7 +2,7 @@
 
 namespace Chocofamily\PhalconHealthCheck\Providers;
 
-use Chocofamily\PhalconHealthCheck\Services\HealthcheckConfigService;
+use Chocofamily\PhalconHealthCheck\Services\HealthcheckDefaultConfigService;
 use Phalcon\Config;
 use Phalcon\Di;
 use \Phalcon\Mvc\Micro;
@@ -66,8 +66,8 @@ class HealthCheckServiceProvider extends Component
     private function mergePackageConfig(Config &$config)
     {
         if (!$config->offsetExists($this->serviceName)) {
-            $healthcheckConfigService = new HealthcheckConfigService();
-            $healthcheckConfig = new Config($healthcheckConfigService->get());
+            $healthcheckDefaultConfigService = new HealthcheckDefaultConfigService();
+            $healthcheckConfig = new Config($healthcheckDefaultConfigService->get());
             $config->offsetSet($this->serviceName, new Config());
             $config->get($this->serviceName)->merge($healthcheckConfig);
         }
