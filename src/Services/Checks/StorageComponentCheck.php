@@ -3,7 +3,7 @@
 
 namespace Chocofamily\PhalconHealthCheck\Services\Checks;
 
-use Chocofamily\PhalconHealthCheck\Services\HealthcheckDefaultConfigService;
+use Chocofamily\PhalconHealthCheck\Services\DefaultHealthcheckConfigService;
 use Phalcon\Di;
 use RuntimeException;
 
@@ -12,10 +12,10 @@ class StorageComponentCheck implements ComponentCheckInterface
     public function check()
     {
         $healthcheckConfig = Di::getDefault()->get('config')->get('healthcheck');
-        $healthcheckDefaultConfigService = new HealthcheckDefaultConfigService();
+        $defaultHealthcheckConfigService = new DefaultHealthcheckConfigService();
 
-        $storagePath = $healthcheckConfig->get('storagepath', $healthcheckDefaultConfigService->get('storagepath'));
-        $storageDirs = $healthcheckConfig->get('storagedirs', $healthcheckDefaultConfigService->get('storagedirs'));
+        $storagePath = $healthcheckConfig->get('storagepath', $defaultHealthcheckConfigService->get('storagepath'));
+        $storageDirs = $healthcheckConfig->get('storagedirs', $defaultHealthcheckConfigService->get('storagedirs'));
 
         if (!is_dir($storagePath)) {
             throw new RuntimeException("Invalid storage path specified, please configure it");

@@ -2,7 +2,7 @@
 
 namespace Chocofamily\PhalconHealthCheck\Services;
 
-class HealthcheckDefaultConfigService
+class DefaultHealthcheckConfigService
 {
     private $config;
 
