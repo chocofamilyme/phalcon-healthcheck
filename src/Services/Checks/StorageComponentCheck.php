@@ -5,6 +5,7 @@ namespace Chocofamily\PhalconHealthCheck\Services\Checks;
 
 use Chocofamily\PhalconHealthCheck\Services\DefaultHealthcheckConfigService;
 use Phalcon\Di;
+use Phalcon\Text;
 use RuntimeException;
 
 class StorageComponentCheck implements ComponentCheckInterface
@@ -21,8 +22,8 @@ class StorageComponentCheck implements ComponentCheckInterface
             throw new RuntimeException("Invalid storage path specified, please configure it");
         }
 
-        $fileName = 'healthcheck.txt';
-        $text = 'some data';
+        $fileName = 'healthcheck_'.Text::random(Text::RANDOM_ALNUM, 10);
+        $text = 'some text';
 
         foreach ($storageDirs as $storageDir) {
             $dir = $storagePath.$storageDir;

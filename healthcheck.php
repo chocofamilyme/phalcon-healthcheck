@@ -67,11 +67,11 @@ return [
     | Storage directories
     |--------------------------------------------------------------------------
     |
-    | Specify storage directories
+    | Specify storage directories, example: 'logs/' (use a slash at the end)
     |
     */
 
-    'storagedirs' => ['', 'app/', 'cache/', 'logs/'],
+    'storagedirs' => ['', ],
 
     /*
     |--------------------------------------------------------------------------
