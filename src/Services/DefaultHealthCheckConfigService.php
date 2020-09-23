@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\PhalconHealthCheck\Services;
 
 class DefaultHealthCheckConfigService
 {
-    private $config;
+    private array $config;
 
     public function __construct()
     {
-        $this->config = include(__DIR__.'/../../healthCheck.php');
+        $this->config = include(__DIR__.'/../../healthcheck.php');
     }
 
     /**
