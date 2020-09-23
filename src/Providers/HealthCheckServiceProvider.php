@@ -14,12 +14,12 @@ use Phalcon\Mvc\Micro\Collection as MicroCollection;
 class HealthCheckServiceProvider implements ServiceProviderInterface
 {
     protected string $serviceName = 'healthCheck';
-    protected Micro $app;
+    protected DiInterface $container;
 
     public function register(DiInterface $container): void
     {
-        $app = $container->getShared('application');
-        if ($app instanceof Micro) {
+        $this->container = $container;
+        if ($this->getApp() instanceof Micro) {
             $config = $container->getShared('config');
             $this->mergePackageConfig($config);
             $this->importRoutes($config);
@@ -30,12 +30,13 @@ class HealthCheckServiceProvider implements ServiceProviderInterface
 
     private function mergePackageConfig(Config $config): void
     {
-        if (!$config->offsetExists($this->serviceName)) {
-            $defaultHealthCheckConfigService = new DefaultHealthCheckConfigService();
-            $healthCheckConfig               = new Config($defaultHealthCheckConfigService->get());
-            $config->offsetSet($this->serviceName, new Config());
-            $config->get($this->serviceName)->merge($healthCheckConfig);
-        }
+        $defaultHealthCheckConfigService = new DefaultHealthCheckConfigService();
+        $healthCheckConfig               = new Config(
+            [
+                $this->serviceName => $defaultHealthCheckConfigService->get(),
+            ]
+        );
+        $healthCheckConfig->merge($config);
     }
 
     private function importRoutes(Config $config): void
@@ -46,28 +47,24 @@ class HealthCheckServiceProvider implements ServiceProviderInterface
             [
                 'class'   => HealthCheckController::class,
                 'methods' => [
-                    [
-                        $healthCheckConfig->get('route')         => [
-                            'action' => 'simple',
-                            'name'   => 'chocofamily-healthcheck',
-                        ],
-                        $healthCheckConfig->get('routeExtended') => [
-                            'action' => 'extended',
-                            'name'   => 'chocofamily-healthcheck-extended',
-                        ],
+                    $healthCheckConfig->get('route')         => [
+                        'action' => 'simple',
+                        'name'   => 'chocofamily-healthcheck',
                     ],
+                    $healthCheckConfig->get('routeExtended') => [
+                        'action' => 'extended',
+                        'name'   => 'chocofamily-healthcheck-extended',
+                    ],
+
                 ],
             ],
         ];
-
         foreach ($routes as $route) {
             $collection = new MicroCollection();
             $collection->setHandler($route['class'], true);
 
-            foreach ($route['methods'] as $verb => $methods) {
-                foreach ($methods as $endpoint => $action) {
-                    $collection->get($endpoint, $action['action'], $action['name']);
-                }
+            foreach ($route['methods'] as $endpoint => $action) {
+                $collection->get($endpoint, $action['action'], $action['name']);
             }
 
             $this->getApp()->mount($collection);
@@ -79,6 +76,6 @@ class HealthCheckServiceProvider implements ServiceProviderInterface
      */
     public function getApp(): Micro
     {
-        return $this->app;
+        return $this->container->getShared('application');
     }
 }

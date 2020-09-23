@@ -23,7 +23,7 @@ class CacheComponentCheck implements ComponentCheckInterface
 
         $key   = Text::random();
         $value = Text::random();
-        $cache->save($key, $value, 3);
+        $cache->set($key, $value, 3);
 
         if ($cache->get($key) !== $value) {
             throw new RuntimeException('Cache does not works as expected');
