@@ -2,23 +2,23 @@
 
 namespace Chocofamily\PhalconHealthCheck\Services;
 
-class DefaultHealthcheckConfigService
+class DefaultHealthCheckConfigService
 {
     private $config;
 
     public function __construct()
     {
-        $this->config = include(__DIR__.'/../../healthcheck.php');
+        $this->config = include(__DIR__.'/../../healthCheck.php');
     }
 
     /**
-     * @param null $key
+     * @param string|null $key
      *
      * @return mixed
      */
-    public function get($key=null)
+    public function get(?string $key = null)
     {
-        if ($key==null) {
+        if ($key === null) {
             return $this->config;
         }
 

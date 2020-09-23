@@ -4,10 +4,6 @@ use Phalcon\Config;
 
 class ConfigCest
 {
-    public function _before(UnitTester $I)
-    {
-    }
-
     // tests
     /**
      * @param UnitTester   $I
@@ -17,17 +13,16 @@ class ConfigCest
      */
     public function tryToMergePackageConfig(UnitTester $I, \Helper\Unit $helper)
     {
-        $I->wantToTest('Объединить конфигурацию пакета healthcheck.php, если проекте такого нет');
+        $I->wantToTest('Объединить конфигурацию пакета healthCheck.php, если проекте такого нет');
 
-        $di                = \Phalcon\Di::getDefault();
-        $config            = $di->get('config');
-        $healthcheckConfig = $config->get('healthcheck');
-        $I->assertNull($healthcheckConfig);
+        $config            = \Phalcon\Di::getDefault()->get('config');
+        $healthCheckConfig = $config->get('healthCheck');
+        $I->assertNull($healthCheckConfig);
 
         $serviceProvider = new \Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider();
 
         $helper->invokeMethod($serviceProvider, 'mergePackageConfig', [&$config]);
-        $healthcheckConfig = $config->get('healthcheck');
-        $I->assertNotNull($healthcheckConfig);
+        $healthCheckConfig = $config->get('healthCheck');
+        $I->assertNotNull($healthCheckConfig);
     }
 }

@@ -1,23 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\PhalconHealthCheck\Services\Checks;
 
-use Phalcon\Di;
+use Phalcon\Di\DiInterface;
 use Phalcon\Text;
 use RuntimeException;
 
 class CacheComponentCheck implements ComponentCheckInterface
 {
-    public function check()
+    private DiInterface $di;
+
+    public function register(DiInterface $di): void
     {
-        $di = Di::getDefault();
-        $cache = $di->get('cache');
+        $this->di = $di;
+    }
 
-        $key = Text::random();
+    public function check(): void
+    {
+        $cache = $this->di->get('cache');
+
+        $key   = Text::random();
         $value = Text::random();
-        $cache->save($key, $value, 3);
+        $cache->set($key, $value, 3);
 
-        if($cache->get($key) != $value) {
+        if ($cache->get($key) !== $value) {
             throw new RuntimeException('Cache does not works as expected');
         }
     }

@@ -2,107 +2,69 @@
 
 namespace Chocofamily\PhalconHealthCheck\Providers;
 
-use Chocofamily\PhalconHealthCheck\Services\DefaultHealthcheckConfigService;
+use Chocofamily\PhalconHealthCheck\Controllers\HealthCheckController;
+use Chocofamily\PhalconHealthCheck\Services\ComponentCheckService;
+use Chocofamily\PhalconHealthCheck\Services\DefaultHealthCheckConfigService;
 use Phalcon\Config;
-use Phalcon\Di;
+use Phalcon\Di\DiInterface;
+use Phalcon\Di\ServiceProviderInterface;
 use \Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
-use Phalcon\Mvc\User\Component;
 
-class HealthCheckServiceProvider extends Component
+class HealthCheckServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * The Service name.
-     *
-     * @var string
-     */
-    protected $serviceName = 'healthcheck';
+    protected string $serviceName = 'healthCheck';
+    protected DiInterface $container;
 
-    protected $app;
-
-    /**
-     * Register application service.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(DiInterface $container): void
     {
+        $this->container = $container;
         if ($this->getApp() instanceof Micro) {
-            $di     = Di::getDefault();
-            $config = $di->get('config');
+            $config = $container->getShared('config');
             $this->mergePackageConfig($config);
             $this->importRoutes($config);
+
+            $container->setShared('componentCheckService', new ComponentCheckService($container));
         }
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return void
-     */
-    public function boot()
+    private function mergePackageConfig(Config $config): void
     {
+        $defaultHealthCheckConfigService = new DefaultHealthCheckConfigService();
+        $healthCheckConfig               = new Config(
+            [
+                $this->serviceName => $defaultHealthCheckConfigService->get(),
+            ]
+        );
+        $healthCheckConfig->merge($config);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getName()
+    private function importRoutes(Config $config): void
     {
-        return $this->serviceName;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return void
-     */
-    public function configure()
-    {
-    }
-
-    private function mergePackageConfig(Config &$config)
-    {
-        if (!$config->offsetExists($this->serviceName)) {
-            $defaultHealthcheckConfigService = new DefaultHealthcheckConfigService();
-            $healthcheckConfig = new Config($defaultHealthcheckConfigService->get());
-            $config->offsetSet($this->serviceName, new Config());
-            $config->get($this->serviceName)->merge($healthcheckConfig);
-        }
-    }
-
-    private function importRoutes(Config $config)
-    {
-        $healthcheckConfig = $config->get($this->serviceName);
+        $healthCheckConfig = $config->get($this->serviceName);
 
         $routes = [
             [
-                'class'   => 'Chocofamily\PhalconHealthCheck\Controllers\HealthCheckController',
+                'class'   => HealthCheckController::class,
                 'methods' => [
-                    'get' => [
-                        $healthcheckConfig->get('routesimple')   => [
-                            'action' => 'simple',
-                            'name'   => 'chocofamily-healthcheck',
-                        ],
-                        $healthcheckConfig->get('routeextendet') => [
-                            'action' => 'extendet',
-                            'name'   => 'chocofamily-healthchec-extendet',
-                        ],
+                    $healthCheckConfig->get('route')         => [
+                        'action' => 'simple',
+                        'name'   => 'chocofamily-healthcheck',
                     ],
+                    $healthCheckConfig->get('routeExtended') => [
+                        'action' => 'extended',
+                        'name'   => 'chocofamily-healthcheck-extended',
+                    ],
+
                 ],
             ],
         ];
-
         foreach ($routes as $route) {
             $collection = new MicroCollection();
             $collection->setHandler($route['class'], true);
 
-            foreach ($route['methods'] as $verb => $methods) {
-                foreach ($methods as $endpoint => $action) {
-                    $collection->$verb($endpoint, $action['action'], $action['name']);
-                }
+            foreach ($route['methods'] as $endpoint => $action) {
+                $collection->get($endpoint, $action['action'], $action['name']);
             }
 
             $this->getApp()->mount($collection);
@@ -110,18 +72,10 @@ class HealthCheckServiceProvider extends Component
     }
 
     /**
-     * @return mixed
+     * @return Micro
      */
-    public function getApp()
+    public function getApp(): Micro
     {
-        return $this->app;
-    }
-
-    /**
-     * @param mixed $app
-     */
-    public function setApp($app): void
-    {
-        $this->app = $app;
+        return $this->container->getShared('application');
     }
 }

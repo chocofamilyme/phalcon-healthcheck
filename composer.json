@@ -1,31 +1,34 @@
 {
-    "name": "chocofamilyme/phalcon-healthcheck",
-    "description": "Serves functionality of healthchecks of your application",
-    "keywords": [
-        "phalcon",
-        "status",
-        "healthcheck"
-    ],
-    "type": "library",
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "IT Chocolife.me",
-            "homepage": "https://chocolife.me"
-        }
-    ],
-    "require": {
-        "php": ">= 7.0.0",
-        "ext-phalcon": ">= 3.0.0"
-    },
-    "require-dev": {
-        "codeception/codeception": "^3.0.3"
-    },
-    "autoload": {
-        "psr-4": {
-            "Chocofamily\\PhalconHealthCheck\\": "src/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+  "name": "chocofamilyme/phalcon-healthcheck",
+  "description": "Serves functionality of healthchecks of your application",
+  "keywords": [
+    "phalcon",
+    "status",
+    "healthcheck"
+  ],
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "IT Chocolife.me",
+      "homepage": "https://chocolife.me"
+    }
+  ],
+  "require": {
+    "php": ">= 7.4.0",
+    "ext-phalcon": ">= 4.0.6",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "codeception/codeception": "^4.1",
+    "phalcon/ide-stubs": "^4.0",
+    "codeception/module-asserts": "^1.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Chocofamily\\PhalconHealthCheck\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
