@@ -20,7 +20,7 @@ class ComponentCheckService
     public function __construct(DiInterface $di)
     {
         $this->di                = $di;
-        $this->healthCheckConfig = $di->get('config')->get('healthCheck');
+        $this->healthCheckConfig = $di->get('config')->get('healthcheck');
     }
 
     /**

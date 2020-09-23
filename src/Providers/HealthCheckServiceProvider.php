@@ -13,7 +13,6 @@ use Phalcon\Mvc\Micro\Collection as MicroCollection;
 
 class HealthCheckServiceProvider implements ServiceProviderInterface
 {
-    protected string $serviceName = 'healthCheck';
     protected DiInterface $container;
 
     public function register(DiInterface $container): void
@@ -33,17 +32,18 @@ class HealthCheckServiceProvider implements ServiceProviderInterface
         $defaultHealthCheckConfigService = new DefaultHealthCheckConfigService();
         $healthCheckConfig               = new Config(
             [
-                $this->serviceName => $defaultHealthCheckConfigService->get(),
+                'healthcheck' => $defaultHealthCheckConfigService->get(),
             ]
         );
-        $healthCheckConfig->merge($config);
+        $healthCheckConfig->merge($config->get('healthcheck', []));
+
+        $config->merge($healthCheckConfig);
     }
 
     private function importRoutes(Config $config): void
     {
-        $healthCheckConfig = $config->get($this->serviceName);
-
-        $routes = [
+        $healthCheckConfig = $config->get('healthcheck');
+        $routes            = [
             [
                 'class'   => HealthCheckController::class,
                 'methods' => [
@@ -59,6 +59,7 @@ class HealthCheckServiceProvider implements ServiceProviderInterface
                 ],
             ],
         ];
+
         foreach ($routes as $route) {
             $collection = new MicroCollection();
             $collection->setHandler($route['class'], true);

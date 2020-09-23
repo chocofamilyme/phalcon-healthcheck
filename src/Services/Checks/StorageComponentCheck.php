@@ -20,7 +20,7 @@ class StorageComponentCheck implements ComponentCheckInterface
 
     public function check(): void
     {
-        $healthCheckConfig               = $this->di->get('config')->get('healthCheck');
+        $healthCheckConfig               = $this->di->get('config')->get('healthcheck');
         $defaultHealthCheckConfigService = new DefaultHealthCheckConfigService();
 
         $storagePath = $healthCheckConfig->get('storagePath', $defaultHealthCheckConfigService->get('storagePath'));
