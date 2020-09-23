@@ -2,26 +2,24 @@
 
 class ChocofamilyResponseCest
 {
-    public function _before(UnitTester $I)
-    {
-    }
-
     /**
      * @dataProvider simpleResponseProvider
      *
      * @param UnitTester           $I
      * @param \Codeception\Example $data
+     *
+     * @throws JsonException
      */
-    public function tryToSimpleResponse(UnitTester $I, \Codeception\Example $data)
+    public function tryToSimpleResponse(UnitTester $I, \Codeception\Example $data): void
     {
         $I->wantToTest('метод Simple');
 
         $checks   = $data['checks'];
-        $response = new \Chocofamily\PhalconHealthCheck\Responses\ChocofamilyResponse();
+        $response = new \Chocofamily\PhalconHealthCheck\Responses\Response();
         $actual   = $response->simpleResponse($checks);
         $expected = $data['expected'];
 
-        $I->assertEquals($expected, $actual);
+        $I->assertEquals(\json_encode($expected, JSON_THROW_ON_ERROR), $actual->getContent());
     }
 
     /**
@@ -37,10 +35,7 @@ class ChocofamilyResponseCest
                     ],
                 'expected' =>
                     [
-                        'error_code' => 0,
-                        'status'     => 'success',
-                        'message'    => 'Everything is fine',
-                        'data'       => ['DB' => 'OK'],
+                        'data' => ['DB' => 'OK'],
                     ],
             ],
             [
@@ -50,37 +45,34 @@ class ChocofamilyResponseCest
                     ],
                 'expected' =>
                     [
-                        'error_code' => 500,
-                        'status'     => 'error',
-                        'message'    => 'There are some critical checks',
-                        'data'       => ['DB' => 'CRITICAL'],
+                        'data' => ['DB' => 'CRITICAL'],
                     ],
             ],
         ];
     }
 
     /**
-     * @dataProvider extendetResponseProvider
+     * @dataProvider extendedResponseProvider
      *
      * @param UnitTester           $I
      * @param \Codeception\Example $data
      */
-    public function tryToExtendetResponse(UnitTester $I, \Codeception\Example $data)
+    public function tryToExtendedResponse(UnitTester $I, \Codeception\Example $data): void
     {
-        $I->wantToTest('метод Extendet');
+        $I->wantToTest('метод extended');
 
         $checks   = $data['checks'];
-        $response = new \Chocofamily\PhalconHealthCheck\Responses\ChocofamilyResponse();
-        $actual   = $response->extendetResponse($checks);
+        $response = new \Chocofamily\PhalconHealthCheck\Responses\Response();
+        $actual   = $response->extendedResponse($checks);
         $expected = $data['expected'];
 
-        $I->assertEquals($expected, $actual);
+        $I->assertEquals(\json_encode($expected, JSON_THROW_ON_ERROR), $actual->getContent());
     }
 
     /**
      * @return array
      */
-    protected function extendetResponseProvider()
+    protected function extendedResponseProvider()
     {
         return [
             [
@@ -90,10 +82,7 @@ class ChocofamilyResponseCest
                     ],
                 'expected' =>
                     [
-                        'error_code' => 0,
-                        'status'     => 'success',
-                        'message'    => 'Everything is fine',
-                        'data'       => ['DB' => ['STATUS' => 'OK', 'STATUS_BOOL' => true, 'MESSAGE' => null]],
+                        'data' => ['DB' => ['STATUS' => 'OK', 'STATUS_BOOL' => true, 'MESSAGE' => null]],
                     ],
             ],
             [
@@ -103,11 +92,8 @@ class ChocofamilyResponseCest
                     ],
                 'expected' =>
                     [
-                        'error_code' => 500,
-                        'status'     => 'error',
-                        'message'    => 'There are some critical checks',
                         'data'
-                                     => [
+                        => [
                             'DB' => [
                                 'STATUS'      => 'CRITICAL',
                                 'STATUS_BOOL' => false,

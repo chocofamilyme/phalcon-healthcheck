@@ -4,30 +4,26 @@ For example you want to check "Database Connection" of your microservice.
 
 # Installation
 ```bash
-composer require chocofamilyme/phalcon-healthcheck ^0.0
+composer require chocofamilyme/phalcon-healthcheck ^1.0
 ```
-- Create file app/providers/HealthCheck/ServiceProvider.php with this content:
+- Example setting your application:
 ```php
 <?php
 
-namespace RestAPI\Providers\HealthCheck;
-
-use RestAPI\Providers\ServiceProviderInterface;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Mvc\Micro;
 use Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider;
 
-class ServiceProvider extends HealthCheckServiceProvider implements ServiceProviderInterface
-{
-    protected $app;
-    
-    public function __construct()
-    {
-        $this->app = $this->getDI()->get('bootstrap')->getApplication();
-    }
-}
+$container   = new FactoryDefault();
+$application = new Micro($container);
+
+$container->setShared('application', $application);
+
+$container->register(new HealthCheckServiceProvider());
 
 ```
 - Add above ServiceProvider class to the config config/providers.php
-- Copy healthcheck.php to config/ and manage necessary configuration values for the project
+- Copy healthCheck.php to config/ and manage necessary configuration values for the project
 
 # Checks
 - Database connection check
@@ -45,7 +41,7 @@ class ServiceProvider extends HealthCheckServiceProvider implements ServiceProvi
   "STORAGE": "OK"
 }
 ```
-- /health/extendet
+- /health/extended
 ```json
 {
   "DB": {
@@ -88,9 +84,6 @@ There is a configuration param which describes which response class to use to ou
 output would look like this
 ```json
 {
-    "error_code": 0,
-    "status": "success",
-    "message": "Everything is fine",
     "data": {
         "DB": "OK",
         "CACHE": "OK",

@@ -1,44 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\PhalconHealthCheck\Controllers;
 
 use Chocofamily\PhalconHealthCheck\Services\ComponentCheckService;
-use Phalcon\Di;
+use Phalcon\Mvc\Controller;
 
-class HealthCheckController
+/**
+ * @property ComponentCheckService $componentCheckService
+ */
+class HealthCheckController extends Controller
 {
     /**
-     * @var ComponentCheckService
+     * @return mixed
      */
-    private $componentCheck;
-    private $healthcheckConfig;
-
-    /**
-     * HealthCheckController constructor.
-     */
-    public function __construct()
-    {
-        $this->componentCheck = new ComponentCheckService();
-        $di = Di::getDefault();
-        $this->healthcheckConfig = $di->get('config')->get('healthcheck');
-    }
-
     public function simple()
     {
-        $checks = $this->componentCheck->getResponse();
-        $responseClass = $this->healthcheckConfig->get('response');
+        $healthCheckConfig = $this->getDI()->get('config')->get('healthCheck');
+
+        $checks        = $this->componentCheckService->getResponse();
+        $responseClass = $healthCheckConfig->get('response');
+
         return (new $responseClass)->simpleResponse($checks);
     }
 
 
-    public function extendet()
+    /**
+     * @return mixed|null
+     */
+    public function extended()
     {
-        if(!$this->healthcheckConfig->get('extendet')) {
+        $healthCheckConfig = $this->getDI()->get('config')->get('healthCheck');
+
+        if (null === $healthCheckConfig->get('extended')) {
             return null;
         }
 
-        $checks = $this->componentCheck->getResponse();
-        $responseClass = $this->healthcheckConfig->get('response');
-        return (new $responseClass)->extendetResponse($checks);
+        $checks        = $this->componentCheckService->getResponse();
+        $responseClass = $healthCheckConfig->get('response');
+
+        return (new $responseClass)->extendedResponse($checks);
     }
 }

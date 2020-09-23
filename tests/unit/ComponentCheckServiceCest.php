@@ -5,10 +5,6 @@ use Helper\Mock\OkComponentCheck;
 
 class ComponentCheckServiceCest
 {
-    public function _before(UnitTester $I)
-    {
-    }
-
     /**
      * @dataProvider componentCheckProvider
      *
@@ -23,7 +19,9 @@ class ComponentCheckServiceCest
         $I->wantToTest('метод getStatus');
 
         $check = new $data['check'];
-        $componentCheckService = new \Chocofamily\PhalconHealthCheck\Services\ComponentCheckService();
+        $di = \Phalcon\Di::getDefault();
+
+        $componentCheckService = new \Chocofamily\PhalconHealthCheck\Services\ComponentCheckService($di);
         $actual = $helper->invokeMethod($componentCheckService, 'getStatus', [$check]);
         $expected = $data['expected'];
 

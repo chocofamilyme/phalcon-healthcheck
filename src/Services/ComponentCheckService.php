@@ -2,42 +2,46 @@
 
 namespace Chocofamily\PhalconHealthCheck\Services;
 
-use Phalcon\Di;
+use Chocofamily\PhalconHealthCheck\Services\Checks\ComponentCheckInterface;
+use Phalcon\Config;
+use Phalcon\Di\DiInterface;
+use Throwable;
 
 class ComponentCheckService
 {
-    const OK = 'OK';
-    const CRITICAL = 'CRITICAL';
-
-    /**
-     * @var array
-     */
-    private $healthcheckConfig;
+    private Config $healthCheckConfig;
+    private DiInterface $di;
 
     /**
      * ComponentCheck constructor.
+     *
+     * @param DiInterface $di
      */
-    public function __construct()
+    public function __construct(DiInterface $di)
     {
-        $di = Di::getDefault();
-        $this->healthcheckConfig = $di->get('config')->get('healthcheck');
+        $this->di                = $di;
+        $this->healthCheckConfig = $di->get('config')->get('healthCheck');
     }
 
     /**
      * @return array
      */
-    public function getResponse()
+    public function getResponse(): array
     {
-        $checks = $this->healthcheckConfig->get('componentChecks');
+        $checks         = $this->healthCheckConfig->get('componentChecks');
         $checkResponses = [];
-        foreach($checks as $checkTitle => $check)
-        {
-            $response = $this->getStatus((new $check));
+        foreach ($checks as $checkTitle => $check) {
+            /** @var ComponentCheckInterface $componentCheck */
+            $componentCheck = new $check();
+            $componentCheck->register($this->di);
+
+            $response                    = $this->getStatus($componentCheck);
             $checkResponses[$checkTitle] = [
-                'status' => $response['status'],
-                'message' => $response['message']
+                'status'  => $response['status'],
+                'message' => $response['message'],
             ];
         }
+
         return $checkResponses;
     }
 
@@ -46,23 +50,20 @@ class ComponentCheckService
      *
      * @return array
      */
-    private function getStatus(Checks\ComponentCheckInterface $check)
+    private function getStatus(Checks\ComponentCheckInterface $check): array
     {
-        try
-        {
+        try {
             $check->check();
+
             return [
-                'status' => true,
-                'message' => null
+                'status'  => true,
+                'message' => null,
             ];
-        }
-        catch(\Exception $exception)
-        {
+        } catch (Throwable $exception) {
             return [
-                'status' => false,
-                'message' => $exception->getMessage()
+                'status'  => false,
+                'message' => $exception->getMessage(),
             ];
         }
     }
-
 }

@@ -1,17 +1,23 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Chocofamily\PhalconHealthCheck\Services\Checks;
 
-
-use Phalcon\Di;
+use Phalcon\Di\DiInterface;
 
 class DatabaseComponentCheck implements ComponentCheckInterface
 {
-    public function check()
+    private DiInterface $di;
+
+    public function register(DiInterface $di): void
     {
-        $di = Di::getDefault();
-        $db = $di->get('db');
+        $this->di = $di;
+    }
+
+    public function check(): void
+    {
+        $db = $this->di->get('db');
         $db->connect();
     }
 }

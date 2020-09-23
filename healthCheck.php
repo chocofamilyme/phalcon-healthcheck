@@ -12,18 +12,18 @@ return [
     |
     */
 
-    'routesimple' => '/health',
+    'route' => '/health',
 
     /*
     |--------------------------------------------------------------------------
-    | Route for the extendet response
+    | Route for the extended response
     |--------------------------------------------------------------------------
     |
-    | Specify route for the extendet response
+    | Specify route for the extended response
     |
     */
 
-    'routeextendet' => '/health/extendet',
+    'routeExtended' => '/health/extended',
 
     /*
     |--------------------------------------------------------------------------
@@ -36,20 +36,20 @@ return [
     |
     */
 
-    'response' => Chocofamily\PhalconHealthCheck\Responses\ChocofamilyResponse::class,
+    'response' => Chocofamily\PhalconHealthCheck\Responses\Response::class,
 
     /*
     |--------------------------------------------------------------------------
-    | Enable extendet health check endpoint
+    | Enable extended health check endpoint
     |--------------------------------------------------------------------------
     |
-    | Enable extendet endpoint for healthchecks with more information what
+    | Enable extended endpoint for healthchecks with more information what
     | went wrong, this is dangerous because in the exception messages may be
     | confidential information
     |
     */
 
-    'extendet' => false,
+    'extended' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -60,7 +60,7 @@ return [
     |
     */
 
-    'storagepath' => '../storage/',
+    'storagePath' => '../storage/',
 
     /*
     |--------------------------------------------------------------------------
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'storagedirs' => ['', ],
+    'storageDirs' => ['', ],
 
     /*
     |--------------------------------------------------------------------------
@@ -90,6 +90,6 @@ return [
         'DB'       => Chocofamily\PhalconHealthCheck\Services\Checks\DatabaseComponentCheck::class,
         'CACHE'    => Chocofamily\PhalconHealthCheck\Services\Checks\CacheComponentCheck::class,
         //'SESSIONS' => Chocofamily\PhalconHealthCheck\Services\Checks\SessionsComponentCheck::class,
-        //'STORAGE'  => Chocofamily\PhalconHealthCheck\Services\Checks\StorageComponentCheck::class,
+        'STORAGE'  => Chocofamily\PhalconHealthCheck\Services\Checks\StorageComponentCheck::class,
     ]
 ];
