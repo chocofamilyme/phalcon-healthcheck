@@ -17,7 +17,7 @@ class HealthCheckController extends Controller
      */
     public function simple()
     {
-        $healthCheckConfig = $this->getDI()->get('config')->get('healthCheck');
+        $healthCheckConfig = $this->getDI()->get('config')->get('healthcheck');
 
         $checks        = $this->componentCheckService->getResponse();
         $responseClass = $healthCheckConfig->get('response');
@@ -31,7 +31,7 @@ class HealthCheckController extends Controller
      */
     public function extended()
     {
-        $healthCheckConfig = $this->getDI()->get('config')->get('healthCheck');
+        $healthCheckConfig = $this->getDI()->get('config')->get('healthcheck');
 
         if (null === $healthCheckConfig->get('extended')) {
             return null;
