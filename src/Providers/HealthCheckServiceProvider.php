@@ -73,9 +73,9 @@ class HealthCheckServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @return Micro
+     * @return mixed
      */
-    public function getApp(): Micro
+    public function getApp()
     {
         return $this->container->getShared('application');
     }
