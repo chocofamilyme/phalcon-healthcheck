@@ -9,8 +9,10 @@ use function json_encode;
 
 class Response implements ResponseInterface
 {
-    protected const OK       = 'OK';
-    protected const CRITICAL = 'CRITICAL';
+    protected const OK                  = 'OK';
+    protected const CRITICAL            = 'CRITICAL';
+    protected const HTTP_STATUS_SUCCESS = 200;
+    protected const HTTP_STATUS_FAIL    = 503;
 
     /**
      * Return data in a simple way
@@ -23,15 +25,17 @@ class Response implements ResponseInterface
     public function simpleResponse(array $checks): PhalconResponse
     {
         $responseArray = [];
+        $httpStatus    = self::HTTP_STATUS_SUCCESS;
         foreach ($checks as $checkTitle => $check) {
             if ($check['status']) {
                 $responseArray[$checkTitle] = self::OK;
             } else {
                 $responseArray[$checkTitle] = self::CRITICAL;
+                $httpStatus                 = self::HTTP_STATUS_FAIL;
             }
         }
 
-        return $this->response($responseArray);
+        return $this->response($responseArray, $httpStatus);
     }
 
     /**
@@ -45,6 +49,7 @@ class Response implements ResponseInterface
     public function extendedResponse(array $checks): PhalconResponse
     {
         $responseArray = [];
+        $httpStatus    = self::HTTP_STATUS_SUCCESS;
         foreach ($checks as $checkTitle => $check) {
             if ($check['status']) {
                 $responseArray[$checkTitle] = [
@@ -58,20 +63,23 @@ class Response implements ResponseInterface
                     'STATUS_BOOL' => false,
                     'MESSAGE'     => $check['message'],
                 ];
+                $httpStatus                 = self::HTTP_STATUS_FAIL;
             }
         }
 
-        return $this->response($responseArray);
+        return $this->response($responseArray, $httpStatus);
     }
 
 
     /**
      * @param array $responseArray
      *
+     * @param int   $httpStatus
+     *
      * @return PhalconResponse
      * @throws JsonException
      */
-    private function response(array $responseArray): PhalconResponse
+    private function response(array $responseArray, int $httpStatus = self::HTTP_STATUS_SUCCESS): PhalconResponse
     {
         $content = json_encode(
             [
@@ -83,6 +91,7 @@ class Response implements ResponseInterface
         $response = new PhalconResponse($content);
 
         $response->setHeader('Content-Type', 'application/json');
+        $response->setStatusCode($httpStatus);
 
         return $response;
     }
