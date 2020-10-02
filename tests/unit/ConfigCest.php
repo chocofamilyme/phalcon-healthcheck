@@ -17,7 +17,7 @@ class ConfigCest
 
         $config            = \Phalcon\Di::getDefault()->get('config');
         $healthCheckConfig = $config->get('healthCheck');
-        $I->assertNull($healthCheckConfig);
+        $I->assertEmpty($healthCheckConfig);
 
         $serviceProvider = new \Chocofamily\PhalconHealthCheck\Providers\HealthCheckServiceProvider();
 
