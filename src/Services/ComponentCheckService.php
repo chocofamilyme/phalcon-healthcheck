@@ -31,6 +31,10 @@ class ComponentCheckService
         $checks         = $this->healthCheckConfig->get('componentChecks');
         $checkResponses = [];
         foreach ($checks as $checkTitle => $check) {
+            if (null === $check) {
+                continue;
+            }
+
             /** @var ComponentCheckInterface $componentCheck */
             $componentCheck = new $check();
             $componentCheck->register($this->di);

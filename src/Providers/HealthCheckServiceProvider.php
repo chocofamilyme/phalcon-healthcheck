@@ -35,7 +35,12 @@ class HealthCheckServiceProvider implements ServiceProviderInterface
                 'healthcheck' => $defaultHealthCheckConfigService->get(),
             ]
         );
-        $healthCheckConfig->merge($config->get('healthcheck', []));
+        if ($config->has('healthcheck')) {
+            $temp = $healthCheckConfig->get('healthcheck');
+            $temp->merge($config->get('healthcheck'));
+            $healthCheckConfig->set('healthcheck', $temp);
+        }
+
 
         $config->merge($healthCheckConfig);
     }
